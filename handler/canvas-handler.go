@@ -3,10 +3,11 @@ package canvas_handler
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 type CanvasHandler struct {
-	canvasDir string
+	CanvasDir string
 }
 
 func (handler *CanvasHandler) InitializeOsContext() {
@@ -14,29 +15,29 @@ func (handler *CanvasHandler) InitializeOsContext() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	filePath := fmt.Sprintf("%s/canvas/", dir)
-	handler.canvasDir = filePath
+	path := filepath.Clean(filepath.Join(dir, ".."))
+	path = fmt.Sprintf("%s/canvas/", path)
+	handler.CanvasDir = path
 }
 
 func (handler CanvasHandler) CreateBlankCanvas() {
 	// 20 x 8 canvas
 	totalNumFiles := 20 * 8
-	dir := handler.canvasDir
+	dir := handler.CanvasDir
 	for i := 0; i < totalNumFiles; i++ {
 		fileName := fmt.Sprintf("%s%d.txt", dir, i)
-		fmt.Println(fileName)
 		os.WriteFile(fileName, []byte{}, 0644)
 	}
 	fmt.Printf("Successfully created %d files", totalNumFiles)
 }
 
 func (handler CanvasHandler) DeleteAllFiles() {
-	entries, err := os.ReadDir(handler.canvasDir)
+	entries, err := os.ReadDir(handler.CanvasDir)
 	if err != nil {
 		fmt.Println(err)
 	}
 	for _, e := range entries {
-		err = os.Remove(handler.canvasDir + e.Name())
+		err = os.Remove(handler.CanvasDir + e.Name())
 		if err != nil {
 			fmt.Println(err)
 		}
