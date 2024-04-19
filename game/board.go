@@ -9,7 +9,10 @@ type Board struct {
 	cells         [][]*Cell
 }
 
-func (board *Board) NewBoard(width, height int) {
+func (board *Board) InitializeBoard(width, height int) {
+	board.width = width
+	board.height = height
+
 	board.cells = make([][]*Cell, height)
 	for i := range board.cells {
 		board.cells[i] = make([]*Cell, width)
@@ -39,4 +42,16 @@ func (board *Board) GenerateFood() (x int, y int) {
 		xRandom = rand.Intn(board.height)
 		yRandom = rand.Intn(board.width)
 	}
+}
+
+func (board Board) String() string {
+	s := "----\n"
+	for row := 0; row < board.height; row++ {
+		for col := 0; col < board.width; col++ {
+			s += board.cells[row][col].String() + ", "
+		}
+		s += "\n"
+	}
+	s += "\n----\n"
+	return s
 }

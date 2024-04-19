@@ -64,6 +64,22 @@ func (linkedList *LinkedList[T]) InsertBack(data T) {
 	linkedList.Size++
 }
 
+func (linkedList *LinkedList[T]) RemoveTail() bool {
+	if linkedList.isEmpty() {
+		return false
+	}
+	if linkedList.Size == 1 {
+		linkedList.Tail = nil
+		linkedList.Head = nil
+		return true
+	}
+
+	linkedList.Tail = linkedList.Tail.Next
+	linkedList.Tail.Prev = nil
+
+	return true
+}
+
 func (linkedList *LinkedList[T]) isEmpty() bool {
 	return linkedList.Size == 0
 }

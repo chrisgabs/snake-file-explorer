@@ -1,21 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"snek/util"
+	game "snek/game"
 )
 
 func main() {
-	list := &util.LinkedList[int]{}
-	list.InsertFront(1)
-	list.InsertFront(2)
-	list.InsertFront(3)
-	list.InsertBack(0)
-	list.InsertBack(-1)
-	fmt.Println(list)
 	// list = &LinkedList{}
 	// list.
 	// initialize os context
+	g := &game.Game{}
+	
+	g.InitializeGame()
+	g.StartGame()
 	// go game.StartGame()
 
 	// canvas := handler.CanvasHandler{}
