@@ -3,11 +3,22 @@ package game
 import "snek/util"
 
 const (
+	NoDirection int = -1
 	Upward int = iota
 	Downward
 	Leftward
 	Rightward
 )
+
+var OppositeDirectionsMapping map[int]int
+
+func init() {
+	OppositeDirectionsMapping := make(map[int]int)
+	OppositeDirectionsMapping[Upward] = Downward
+	OppositeDirectionsMapping[Downward] = Upward
+	OppositeDirectionsMapping[Rightward] = Leftward
+	OppositeDirectionsMapping[Leftward] = Rightward
+}
 
 type Snake struct {
 	Direction int
@@ -28,6 +39,11 @@ func (snake *Snake) Move(nextCell *Cell) {
 	snake.body.InsertFront(nextCell)
 	snake.body.Tail.Data.CellType = Empty
 	_ = snake.body.RemoveTail()
+}
+
+func (snake *Snake) Grow(nextCell *Cell) {
+	nextCell.CellType = SnakePart
+	snake.body.InsertFront(nextCell)
 }
 
 func (snake *Snake) String() string {

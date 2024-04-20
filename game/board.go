@@ -29,7 +29,7 @@ func (board *Board) InitializeBoard(width, height int) {
 	}
 }
 
-// TODO: catch case where there are no more emptry cells (win condition)
+// TODO: catch case where there are no more empty cells (win condition)
 func (board *Board) GenerateFood() (x int, y int) {
 	xRandom := rand.Intn(board.height)
 	yRandom := rand.Intn(board.width)
@@ -42,6 +42,10 @@ func (board *Board) GenerateFood() (x int, y int) {
 		xRandom = rand.Intn(board.height)
 		yRandom = rand.Intn(board.width)
 	}
+}
+
+func (board *Board) GenerateFoodDeterministic(x, y int) {
+	board.cells[x][y].CellType = Food
 }
 
 func (board Board) String() string {

@@ -10,7 +10,7 @@ func main() {
 	// initialize os context
 	g := &game.Game{}
 	
-	g.InitializeGame()
+	g.InitializeGame(10, 10)
 	g.StartGame()
 	// go game.StartGame()
 
