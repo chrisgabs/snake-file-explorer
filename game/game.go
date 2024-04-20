@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"time"
 
+	canvasHandler "snek/canvas_handler"
+
 	"github.com/eiannone/keyboard"
 )
 
 type Game struct {
+	canvas canvasHandler.CanvasHandler
 	board    Board
 	snake    Snake
 	gameOver bool
@@ -17,9 +20,23 @@ func (g *Game) InitializeGame(width, height int) {
 	g.gameOver = false
 	g.board.InitializeBoard(width, height)
 	g.snake.InitializeSnake(g.board.cells[1][1], g.board.cells[2][1])
+	g.canvas = canvasHandler.CanvasHandler{
+		Updater: SnakeCanvasUpdater{
+			board: g.board,
+		},
+	}
 }
 
 func (g *Game) StartGame() {
+	g.canvas.DeleteAllFiles()
+
+	g.canvas.CreateBlankCanvas(g.board.width, g.board.height)
+
+	time.Sleep(time.Second * 2)
+
+	defer func() {
+		g.canvas.DeleteAllFiles()
+	}()
 
 	go g.listenToKeyboard()
 
@@ -28,7 +45,7 @@ func (g *Game) StartGame() {
 
 	// TODO: do not allow changing direction opposite to current direction
 	g.snake.Direction = Rightward
-	g.board.GenerateFoodDeterministic(1,4)
+	g.board.GenerateFood()
 	go func() {
 		for {
 			select {
@@ -36,8 +53,8 @@ func (g *Game) StartGame() {
 				fmt.Println("done")
 				return
 			case <-gameTicker.C:
-				fmt.Println(g.board)
 				g.UpdateGame()
+				g.canvas.Updater.UpdateCanvas()
 			}
 		}
 	}()

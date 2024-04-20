@@ -6,24 +6,30 @@ import (
 	"path/filepath"
 )
 
-type CanvasHandler struct {
-	CanvasDir string
+var CanvasDir string
+
+type CanvasUpdater interface {
+	UpdateCanvas()
 }
 
-func (handler *CanvasHandler) InitializeOsContext() {
+type CanvasHandler struct {
+	Updater CanvasUpdater
+}
+
+func init() {
 	dir, err := os.Getwd()
 	if err != nil {
 		fmt.Println(err)
 	}
 	path := filepath.Clean(filepath.Join(dir, ".."))
 	path = fmt.Sprintf("%s/canvas/", path)
-	handler.CanvasDir = path
+	CanvasDir = path
 }
 
-func (handler CanvasHandler) CreateBlankCanvas() {
+func (handler CanvasHandler) CreateBlankCanvas(width, height int) {
 	// 20 x 8 canvas
-	totalNumFiles := 20 * 8
-	dir := handler.CanvasDir
+	totalNumFiles := width * height
+	dir := CanvasDir
 	for i := 0; i < totalNumFiles; i++ {
 		fileName := fmt.Sprintf("%s%d.txt", dir, i)
 		os.WriteFile(fileName, []byte{}, 0644)
@@ -32,12 +38,12 @@ func (handler CanvasHandler) CreateBlankCanvas() {
 }
 
 func (handler CanvasHandler) DeleteAllFiles() {
-	entries, err := os.ReadDir(handler.CanvasDir)
+	entries, err := os.ReadDir(CanvasDir)
 	if err != nil {
 		fmt.Println(err)
 	}
 	for _, e := range entries {
-		err = os.Remove(handler.CanvasDir + e.Name())
+		err = os.Remove(CanvasDir + e.Name())
 		if err != nil {
 			fmt.Println(err)
 		}
